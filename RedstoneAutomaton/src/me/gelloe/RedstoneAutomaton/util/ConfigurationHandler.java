@@ -8,7 +8,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.Player;
 
 import me.gelloe.RedstoneAutomaton.Automaton;
 import me.gelloe.RedstoneAutomaton.Direction;
@@ -42,7 +41,7 @@ public class ConfigurationHandler {
 				int y = automatonsYAML.getInt(player + "." + automatonPreLoaded + ".y");
 				int z = automatonsYAML.getInt(player + "." + automatonPreLoaded + ".z");
 				String d = automatonsYAML.getString(player + "." + automatonPreLoaded + ".d");
-				new Automaton(new Location(Bukkit.getWorld(world_name), x, y, z), Direction.getDirection(d), (Player) Bukkit.getOfflinePlayer(UUID.fromString(player)), automatonPreLoaded);
+				new Automaton(new Location(Bukkit.getWorld(world_name), x, y, z), Direction.getDirection(d), Bukkit.getOfflinePlayer(UUID.fromString(player)), automatonPreLoaded);
 			}
 		}
 	}

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.BlockData;
@@ -12,8 +13,7 @@ import org.bukkit.block.data.Directional;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Minecart;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
+import org.bukkit.entity.minecart.SpawnerMinecart;
 
 import me.gelloe.RedstoneAutomaton.util.Serial;
 
@@ -23,17 +23,16 @@ public class Automaton {
 
 	private Location l;
 	private Direction d;
-	private Inventory i = Bukkit.createInventory(null, 9, "Basic Inventory");
-	private Minecart m;
-	private Player p;
+	private SpawnerMinecart m;
+	private OfflinePlayer p;
 	private String serial_id;
 
-	public Automaton(Location l, Direction d, Player p, String id) {
+	public Automaton(Location l, Direction d, OfflinePlayer offlinePlayer, String id) {
 		setLocation(new Location(l.getWorld(), l.getBlockX(), l.getBlockY(), l.getBlockZ(), l.getPitch(), l.getYaw()));
 		setDirection(d);
 		m = createMinecart();
 		setID(id);
-		setPlayer(p);
+		setPlayer(offlinePlayer);
 		automaton.add(this);
 		update();
 	}
@@ -58,12 +57,12 @@ public class Automaton {
 		this.d = d;
 	}
 
-	public Player getPlayer() {
+	public OfflinePlayer getPlayer() {
 		return p;
 	}
 
-	public void setPlayer(Player p) {
-		this.p = p;
+	public void setPlayer(OfflinePlayer offlinePlayer) {
+		this.p = offlinePlayer;
 	}
 
 	public String getID() {
@@ -77,17 +76,17 @@ public class Automaton {
 	public Minecart getMinecart() {
 		return m;
 	}
-
+	
 	public void destroyMinecart() {
 		getMinecart().remove();
 	}
 
-	public Minecart createMinecart() {
-		Minecart dummyMinecart = (Minecart) l.getWorld()
+	public SpawnerMinecart createMinecart() {
+		SpawnerMinecart dummyMinecart = (SpawnerMinecart) l.getWorld()
 				.spawnEntity(
 						new Location(l.getWorld(), l.getBlockX() + 0.5, l.getY(), l.getZ() + 0.5,
 								Direction.getPitch(getDirection()), Direction.getYaw(getDirection())),
-						EntityType.MINECART);
+						EntityType.MINECART_MOB_SPAWNER);
 		dummyMinecart.setGravity(false);
 		BlockData piston = Bukkit.createBlockData(Material.PISTON);
 		((Directional) piston).setFacing(BlockFace.NORTH);
@@ -98,11 +97,11 @@ public class Automaton {
 	}
 
 	public void showInv(Player player) {
-		player.openInventory(i);
+		player.openInventory(Inventories.mainGUI(this));
 	}
 
 	public void update() {
-		m.teleport(new Location(l.getWorld(), l.getX() + 0.5, l.getY(), l.getZ() + 0.5, Direction.getPitch(d), Direction.getYaw(d)));
+		getMinecart().teleport(new Location(l.getWorld(), l.getX() + 0.5, l.getY(), l.getZ() + 0.5, Direction.getPitch(d), Direction.getYaw(d)));
 	}
 
 	public void move() {
@@ -153,8 +152,8 @@ public class Automaton {
 			break;
 		}
 		Block b = l.getWorld().getBlockAt(l.getBlockX() + dx, l.getBlockY() + dy, l.getBlockZ() + dz);
-		for (ItemStack e : b.getDrops())
-			i.addItem(e);
+		//for (ItemStack e : b.getDrops())
+		//	i.addItem(e);
 		b.breakNaturally();
 	}
 

@@ -11,6 +11,7 @@ public class Main extends JavaPlugin{
 	public void onEnable() {
 		ConfigurationHandler.setUp();
 		Bukkit.getServer().getPluginManager().registerEvents(new SpawnAutomaton(), this);
+		Bukkit.getServer().getPluginManager().registerEvents(new Inventories(), this);
 		ConfigurationHandler.loadAutomatonList();
 		Bukkit.addRecipe(Items.DisabledRedstoneAutomatonRecipe());
 	}
