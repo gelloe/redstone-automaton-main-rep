@@ -1,0 +1,10 @@
+# ---------------------------------------
+#          IGNORE THIS YAML FILE
+# * This file is for the developer
+# * No configuration here
+# ---------------------------------------
+name: RedstoneAutomaton
+main: me.gelloe.RedstoneAutomaton.Main
+version: 1.0.0
+author: gelloe
+api-version: 1.13
