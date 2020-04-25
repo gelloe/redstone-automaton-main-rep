@@ -29,7 +29,7 @@ public class Automaton {
 	private String serial_id;
 
 	public Automaton(Location l, Direction d, Player p, String id) {
-		setLocation(l);
+		setLocation(new Location(l.getWorld(), l.getBlockX(), l.getBlockY(), l.getBlockZ(), l.getPitch(), l.getYaw()));
 		setDirection(d);
 		m = createMinecart();
 		setID(id);

@@ -12,6 +12,7 @@ public class Main extends JavaPlugin{
 		ConfigurationHandler.setUp();
 		Bukkit.getServer().getPluginManager().registerEvents(new SpawnAutomaton(), this);
 		ConfigurationHandler.loadAutomatonList();
+		Bukkit.addRecipe(Items.DisabledRedstoneAutomatonRecipe());
 	}
 	
 	public void onDisable() {
