@@ -3,6 +3,7 @@ package me.gelloe.RedstoneAutomaton;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import me.gelloe.RedstoneAutomaton.inv.Inventories;
 import me.gelloe.RedstoneAutomaton.util.ConfigurationHandler;
 
 public class Main extends JavaPlugin{

@@ -14,10 +14,13 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Minecart;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.minecart.SpawnerMinecart;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryHolder;
 
+import me.gelloe.RedstoneAutomaton.inv.Inventories;
 import me.gelloe.RedstoneAutomaton.util.Serial;
 
-public class Automaton {
+public class Automaton implements InventoryHolder {
 
 	public static ArrayList<Automaton> automaton = new ArrayList<Automaton>();
 
@@ -26,6 +29,7 @@ public class Automaton {
 	private SpawnerMinecart m;
 	private OfflinePlayer p;
 	private String serial_id;
+	public Inventory i;
 
 	public Automaton(Location l, Direction d, OfflinePlayer offlinePlayer, String id) {
 		setLocation(new Location(l.getWorld(), l.getBlockX(), l.getBlockY(), l.getBlockZ(), l.getPitch(), l.getYaw()));
@@ -77,6 +81,11 @@ public class Automaton {
 		return m;
 	}
 	
+	@Override
+	public Inventory getInventory() {
+		return Inventories.mainGUI(this);
+	}
+
 	public void destroyMinecart() {
 		getMinecart().remove();
 	}
