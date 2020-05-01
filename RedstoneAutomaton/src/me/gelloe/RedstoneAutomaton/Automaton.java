@@ -16,11 +16,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.entity.minecart.SpawnerMinecart;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
+import org.bukkit.inventory.ItemStack;
 
-import me.gelloe.RedstoneAutomaton.inv.Inventories;
-import me.gelloe.RedstoneAutomaton.util.Serial;
+import me.gelloe.RedstoneAutomaton.inv.MainGUI;
 
-public class Automaton implements InventoryHolder {
+public class Automaton implements InventoryHolder{
 
 	public static ArrayList<Automaton> automaton = new ArrayList<Automaton>();
 
@@ -29,7 +29,7 @@ public class Automaton implements InventoryHolder {
 	private SpawnerMinecart m;
 	private OfflinePlayer p;
 	private String serial_id;
-	public Inventory i;
+	private Inventory i;
 
 	public Automaton(Location l, Direction d, OfflinePlayer offlinePlayer, String id) {
 		setLocation(new Location(l.getWorld(), l.getBlockX(), l.getBlockY(), l.getBlockZ(), l.getPitch(), l.getYaw()));
@@ -38,11 +38,8 @@ public class Automaton implements InventoryHolder {
 		setID(id);
 		setPlayer(offlinePlayer);
 		automaton.add(this);
-		update();
-	}
-
-	public Automaton(Location l, Direction d, Player p) {
-		new Automaton(l, d, p, Serial.generate());
+		update();	
+		this.i = Bukkit.createInventory(this, 9);
 	}
 
 	public Location getLocation() {
@@ -80,11 +77,6 @@ public class Automaton implements InventoryHolder {
 	public Minecart getMinecart() {
 		return m;
 	}
-	
-	@Override
-	public Inventory getInventory() {
-		return Inventories.mainGUI(this);
-	}
 
 	public void destroyMinecart() {
 		getMinecart().remove();
@@ -105,8 +97,17 @@ public class Automaton implements InventoryHolder {
 		return dummyMinecart;
 	}
 
+	@Override
+	public Inventory getInventory() {
+		return i;
+	}
+	
+	public void setInventory(Inventory i) {
+		this.i = i;
+	}
+
 	public void showInv(Player player) {
-		player.openInventory(Inventories.mainGUI(this));
+		player.openInventory(new MainGUI(this).i);
 	}
 
 	public void update() {
@@ -161,9 +162,9 @@ public class Automaton implements InventoryHolder {
 			break;
 		}
 		Block b = l.getWorld().getBlockAt(l.getBlockX() + dx, l.getBlockY() + dy, l.getBlockZ() + dz);
-		//for (ItemStack e : b.getDrops())
-		//	i.addItem(e);
+		for (ItemStack e : b.getDrops())
+			i.addItem(e);
 		b.breakNaturally();
 	}
-
+	 
 }

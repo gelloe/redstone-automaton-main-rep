@@ -13,6 +13,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
 import me.gelloe.RedstoneAutomaton.util.ConfigurationHandler;
+import me.gelloe.RedstoneAutomaton.util.Serial;
 
 public class SpawnAutomaton implements Listener {
 
@@ -75,10 +76,10 @@ public class SpawnAutomaton implements Listener {
 	public static void spawnAutomaton(PlayerInteractEvent e, boolean nearPlayer) {
 		if (nearPlayer) {
 			new Automaton(e.getPlayer().getLocation(), Direction.getDirection(e.getPlayer().getFacing()),
-					e.getPlayer());
+					e.getPlayer(), Serial.generate());
 		} else {
 			new Automaton(e.getClickedBlock().getRelative(e.getBlockFace()).getLocation(),
-					Direction.getDirection(e.getPlayer().getFacing()), e.getPlayer());
+					Direction.getDirection(e.getPlayer().getFacing()), e.getPlayer(), Serial.generate());
 		}
 	}
 

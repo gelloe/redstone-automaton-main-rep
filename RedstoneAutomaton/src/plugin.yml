@@ -8,3 +8,7 @@ main: me.gelloe.RedstoneAutomaton.Main
 version: 1.0.0
 author: gelloe
 api-version: 1.13
+commands:
+    raut:
+        description: Main command
+        usage: /<command>

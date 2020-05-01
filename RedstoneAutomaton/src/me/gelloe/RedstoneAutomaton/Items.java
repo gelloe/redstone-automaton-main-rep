@@ -40,7 +40,7 @@ public class Items {
 	}
 	
 	public static ShapedRecipe DisabledRedstoneAutomatonRecipe() {
-		ShapedRecipe r = new ShapedRecipe(DisabledRedstoneAutomaton());
+		ShapedRecipe r = new ShapedRecipe(Main.key, DisabledRedstoneAutomaton());
 		r.shape("gpg","grg","gmg");
 		r.setIngredient('g', Material.GOLD_INGOT);
 		r.setIngredient('p', Material.PISTON);
