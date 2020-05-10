@@ -19,6 +19,7 @@ import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 
 import me.gelloe.RedstoneAutomaton.inv.MainGUI;
+import me.gelloe.RedstoneAutomaton.scripts.Script;
 
 public class Automaton implements InventoryHolder{
 
@@ -30,6 +31,12 @@ public class Automaton implements InventoryHolder{
 	private OfflinePlayer p;
 	private String serial_id;
 	private Inventory i;
+	private ArrayList<ItemStack> picks;
+	private ArrayList<ItemStack> axes;
+	private ArrayList<ItemStack> shovels;
+	private ArrayList<ItemStack> hoes;
+	private Script selected_script;
+	private short upgrades = 0;
 
 	public Automaton(Location l, Direction d, OfflinePlayer offlinePlayer, String id) {
 		setLocation(new Location(l.getWorld(), l.getBlockX(), l.getBlockY(), l.getBlockZ(), l.getPitch(), l.getYaw()));
@@ -39,7 +46,11 @@ public class Automaton implements InventoryHolder{
 		setPlayer(offlinePlayer);
 		automaton.add(this);
 		update();	
-		this.i = Bukkit.createInventory(this, 9);
+		this.i = Bukkit.createInventory(this, 9 * (upgrades + 1));
+		picks = new ArrayList<ItemStack>();
+		axes = new ArrayList<ItemStack>();
+		shovels = new ArrayList<ItemStack>();
+		hoes = new ArrayList<ItemStack>();
 	}
 
 	public Location getLocation() {
@@ -106,12 +117,68 @@ public class Automaton implements InventoryHolder{
 		this.i = i;
 	}
 
+	public ArrayList<ItemStack> getPicks() {
+		return picks;
+	}
+
+	public void setPicks(ArrayList<ItemStack> picks) {
+		this.picks = picks;
+	}
+
+	public ArrayList<ItemStack> getAxes() {
+		return axes;
+	}
+
+	public void setAxes(ArrayList<ItemStack> axes) {
+		this.axes = axes;
+	}
+
+	public ArrayList<ItemStack> getShovels() {
+		return shovels;
+	}
+
+	public void setShovels(ArrayList<ItemStack> shovels) {
+		this.shovels = shovels;
+	}
+
+	public ArrayList<ItemStack> getHoes() {
+		return hoes;
+	}
+
+	public void setHoes(ArrayList<ItemStack> hoes) {
+		this.hoes = hoes;
+	}
+
+	public short getUpgrades() {
+		return upgrades;
+	}
+
+	public void setUpgrades(short upgrades) {
+		this.upgrades = upgrades;
+	}
+
+	public Script getSelScript() {
+		return selected_script;
+	}
+
+	public void setSelScript(Script s) {
+		this.selected_script = s;
+	}
+
 	public void showInv(Player player) {
 		player.openInventory(new MainGUI(this).i);
 	}
 
 	public void update() {
 		getMinecart().teleport(new Location(l.getWorld(), l.getX() + 0.5, l.getY(), l.getZ() + 0.5, Direction.getPitch(d), Direction.getYaw(d)));
+	}
+	
+	public void updateInventory() {
+		Inventory e = Bukkit.createInventory(this, 9 * (upgrades + 1));
+		for (int i = 0; i < getInventory().getContents().length; i++) {
+			e.setItem(i, getInventory().getItem(i));
+		}
+		setInventory(e);
 	}
 
 	public void move() {

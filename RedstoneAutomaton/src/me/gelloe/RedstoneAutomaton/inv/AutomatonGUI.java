@@ -10,5 +10,4 @@ public interface AutomatonGUI extends InventoryHolder {
 	public Inventory getInventory();
 	public void fireClick(InventoryClickEvent e);
 	public Automaton getAutomaton();
-	public int getID();
 }

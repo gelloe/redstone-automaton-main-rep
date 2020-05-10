@@ -1,10 +1,10 @@
 package me.gelloe.RedstoneAutomaton.inv;
 
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -16,14 +16,22 @@ public class Inventories implements Listener {
 	public static void InventoryClickEvent(InventoryClickEvent e) {
 		if (e.getClickedInventory() == null)
 			return;
-		if (e.getCurrentItem() == null || e.getCurrentItem().getType() == Material.AIR)
-			return;
 		if (e.getClickedInventory().getHolder() instanceof AutomatonGUI) {
-			AutomatonGUI g = (AutomatonGUI) e.getClickedInventory().getHolder();
-			g.fireClick(e);
+			if (e.getClick().isLeftClick()) {
+				AutomatonGUI g = (AutomatonGUI) e.getClickedInventory().getHolder();
+				g.fireClick(e);
+			} else {
+				e.setCancelled(true);
+			}
 		}
 	}
 	
+	@EventHandler
+	public static void InventoryDragEvent(InventoryDragEvent e) {
+		if (e.getInventory().getHolder() instanceof AutomatonGUI)
+			e.setCancelled(true);
+	}
+
 	public static void openInv(Player p, Inventory i) {
 		new BukkitRunnable() {
 			@Override
@@ -32,7 +40,7 @@ public class Inventories implements Listener {
 			}
 		}.runTask(Main.getPlugin(Main.class));
 	}
-	
+
 	public static void closeInv(Player p) {
 		new BukkitRunnable() {
 			@Override

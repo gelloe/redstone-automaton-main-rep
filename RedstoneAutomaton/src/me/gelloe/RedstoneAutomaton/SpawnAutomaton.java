@@ -1,7 +1,10 @@
 package me.gelloe.RedstoneAutomaton;
 
-import org.bukkit.GameMode;
+import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Sound;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -17,48 +20,35 @@ import me.gelloe.RedstoneAutomaton.util.Serial;
 
 public class SpawnAutomaton implements Listener {
 
-	private static int c = 0;
-
 	@EventHandler
 	public void PlayerInteractEvent(PlayerInteractEvent e) {
+		
 		Player p = e.getPlayer();
 		PlayerInventory inv = p.getInventory();
 		ItemStack item = inv.getItemInMainHand();
-		if (e.getAction() == Action.RIGHT_CLICK_BLOCK) {
-			if (item.equals(Items.RedstoneAutomaton())) {
-				if (p.getGameMode() == GameMode.CREATIVE) {
-					c++;
-					if (c == 2) {
-						spawnAutomaton(e, false);
-						c = 0;
-					}
-				} else {
-					spawnAutomaton(e, false);
+		Action a = e.getAction();
+		
+		if (a == Action.RIGHT_CLICK_BLOCK) {
+			if (e.getClickedBlock().getType().equals(Material.SMITHING_TABLE)) {
+				if (item.equals(Items.DisabledRedstoneAutomaton())) {
+					item.setAmount(0);
+					p.getWorld().dropItemNaturally(e.getClickedBlock().getRelative(BlockFace.UP).getLocation(), Items.RedstoneAutomaton());
+					p.playSound(p.getLocation(), Sound.ENTITY_ZOMBIE_VILLAGER_CURE, 1.0f, 1.0f);
 				}
 			}
-			if (item.equals(Items.DisabledRedstoneAutomaton())
-					&& e.getClickedBlock().getType().equals(Material.SMITHING_TABLE)) {
-				item.setAmount(item.getAmount() - 1);
-				inv.setItem(inv.getHeldItemSlot(), Items.RedstoneAutomaton());
-			}
-		} else if (e.getAction() == Action.RIGHT_CLICK_AIR) {
-			if (item.getType() == Material.GOLDEN_AXE) {
-				for (Automaton A : Automaton.automaton)
-					A.move();
-			}
-			if (item.equals(Items.RedstoneAutomaton())) {
+			if (item.equals(Items.RedstoneAutomaton()))
+				spawnAutomaton(e, false);
+		} else if (a == Action.RIGHT_CLICK_AIR) {
+			if (item.equals(Items.RedstoneAutomaton()))
 				spawnAutomaton(e, true);
-			}
 		}
 	}
 
 	@EventHandler
 	public void PlayerInteractEntityEvent(PlayerInteractAtEntityEvent e) {
-		for (Automaton a : Automaton.automaton) {
-			if (a.getMinecart() == e.getRightClicked()) {
+		for (Automaton a : Automaton.automaton)
+			if (a.getMinecart() == e.getRightClicked())
 				a.showInv(e.getPlayer());
-			}
-		}
 	}
 
 	@EventHandler
@@ -74,13 +64,17 @@ public class SpawnAutomaton implements Listener {
 	}
 
 	public static void spawnAutomaton(PlayerInteractEvent e, boolean nearPlayer) {
-		if (nearPlayer) {
-			new Automaton(e.getPlayer().getLocation(), Direction.getDirection(e.getPlayer().getFacing()),
-					e.getPlayer(), Serial.generate());
-		} else {
-			new Automaton(e.getClickedBlock().getRelative(e.getBlockFace()).getLocation(),
-					Direction.getDirection(e.getPlayer().getFacing()), e.getPlayer(), Serial.generate());
-		}
+		
+		Player p = e.getPlayer();
+		Location l = p.getLocation();
+		Direction d = Direction.getDirection(p.getFacing());
+		Block b = e.getClickedBlock();
+		BlockFace bf = e.getBlockFace();
+		
+		if (nearPlayer)
+			new Automaton(l, d, p, Serial.generate());
+		else
+			new Automaton(b.getRelative(bf).getLocation(), d, p, Serial.generate());
 	}
 
 }

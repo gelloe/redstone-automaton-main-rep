@@ -13,19 +13,19 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import me.gelloe.RedstoneAutomaton.Automaton;
-import me.gelloe.RedstoneAutomaton.Items;
+import me.gelloe.RedstoneAutomaton.util.ItemBuilder;
 
 public class MainGUI implements AutomatonGUI {
 
-	private static ItemStack START_ICON = Items.glowing(Material.LIME_WOOL, ChatColor.GREEN + "Start script");
-	private static ItemStack EDIT_ICON = Items.glowing(Material.YELLOW_WOOL, "Edit script");
-	private static ItemStack STOP_ICON = Items.glowing(Material.RED_WOOL, ChatColor.RED + "Stop script");
-	private static ItemStack SCRIPTS_ICON = Items.glowing(Material.PAPER, ChatColor.BLUE + "Scripts... ");
-	private static ItemStack TOOLS_ICON = Items.glowing(Material.DIAMOND_PICKAXE, "Tools...");
-	private static ItemStack INVENTORY_ICON = Items.glowing(Material.CHEST, "Open inventory");
-	private static ItemStack INFO_ICON = Items.glowing(Material.FURNACE, ChatColor.DARK_GRAY + "Info");
-	private static ItemStack UPGRADES_ICON = Items.glowing(Material.ANVIL, ChatColor.DARK_GRAY + "Upgrades");
-	private static ItemStack CLOSE_ICON = Items.glowing(Material.ARROW, ChatColor.DARK_RED + "Back");
+	private static ItemStack START_ICON = ItemBuilder.glowing(Material.LIME_WOOL, ChatColor.GREEN + "Start script");
+	private static ItemStack EDIT_ICON = ItemBuilder.glowing(Material.YELLOW_WOOL, "Edit script");
+	private static ItemStack STOP_ICON = ItemBuilder.glowing(Material.RED_WOOL, ChatColor.RED + "Stop script");
+	private static ItemStack SCRIPTS_ICON = ItemBuilder.glowing(Material.PAPER, ChatColor.BLUE + "Scripts... ");
+	private static ItemStack TOOLS_ICON = ItemBuilder.glowing(Material.DIAMOND_PICKAXE, "Tools...");
+	private static ItemStack INVENTORY_ICON = ItemBuilder.glowing(Material.CHEST, "Open inventory");
+	private static ItemStack INFO_ICON = ItemBuilder.glowing(Material.FURNACE, ChatColor.DARK_GRAY + "Info");
+	private static ItemStack UPGRADES_ICON = ItemBuilder.glowing(Material.ANVIL, ChatColor.DARK_GRAY + "Upgrades");
+	private static ItemStack CLOSE_ICON = ItemBuilder.glowing(Material.ARROW, ChatColor.DARK_RED + "Back");
 
 	public Inventory i;
 	public Automaton a;
@@ -64,14 +64,13 @@ public class MainGUI implements AutomatonGUI {
 	}
 
 	@Override
-	public int getID() {
-		return 0;
-	}
-
-	@Override
 	public void fireClick(InventoryClickEvent e) {
 		Player p = (Player) e.getWhoClicked();
 		ItemStack i = e.getCurrentItem();
+		if (i == null) {
+			e.setCancelled(true);
+			return;
+		}
 		if (i.equals(START_ICON)) {
 			// TODO: Start script
 		} else if (i.equals((EDIT_ICON))) {
@@ -84,10 +83,10 @@ public class MainGUI implements AutomatonGUI {
 			Inventories.openInv(p, new ToolsGUI(getAutomaton()).getInventory());
 		} else if (i.equals((INVENTORY_ICON))) {
 			Automaton a = ((AutomatonGUI) e.getInventory().getHolder()).getAutomaton();
-			Inventory ai= a.getInventory();
+			Inventory ai = a.getInventory();
 			Inventories.openInv(p, ai);
 		} else if (i.equals((UPGRADES_ICON))) {
-			// TODO: Open upgrades
+			Inventories.openInv(p, new UpgradesGUI(getAutomaton()).getInventory());
 		} else if (i.equals((CLOSE_ICON))) {
 			Inventories.closeInv(p);
 		}
